@@ -1,7 +1,8 @@
 {
   "name": "codeshift",
-  "module": "index.ts",
+  "module": "./src/index.ts",
   "type": "module",
+  "version": "0.0.1",
   "scripts": {
     "start": "bun run index.ts"
   },
