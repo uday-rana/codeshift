@@ -1,20 +1,22 @@
 {
   "name": "codeshift",
-  "module": "./src/index.ts",
-  "type": "module",
   "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "codeshift": "./src/index.js"
+  },
+  "directories": {
+    "example": "examples"
+  },
+  "author": "Uday Rana",
+  "license": "MIT",
   "scripts": {
-    "start": "bun run index.ts"
-  },
-  "devDependencies": {
-    "@types/bun": "latest",
-    "@types/figlet": "^1.5.8"
-  },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
+    "start": "node ./src/index.js"
   },
   "dependencies": {
-    "figlet": "^1.7.0",
+    "commander": "^12.1.0",
+    "dotenv": "^16.4.5",
     "groq-sdk": "^0.7.0"
   }
 }
