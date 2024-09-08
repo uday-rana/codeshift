@@ -11,7 +11,7 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 program
   .name("codeshift")
   .description("Transform code from one language to another")
-  .version(`v${version}`, "-v, --version")
+  .version(`codeshift v${version}`, "-v, --version")
   .option("-o, --output <filename>", "specify filename to write output to");
 
 program
