@@ -21,8 +21,15 @@ Command-line tool that transforms source code files into any language.
 
 `codeshift [-o <output-filename>] <output-language> <input-files...>`
 
+Example: `codeshift -o index.ts typescript examples\index.js`
+
 ### Options
 
 - `-o, --output`: Specify filename to write output to
 - `-h, --help`: Display help for a command
 - `-v, --version`: Output the version number
+
+### Arguments
+
+- `<output-language>`: The desired language to convert source files to.
+- `<input-files...>`: Paths to the source files, separated by spaces
