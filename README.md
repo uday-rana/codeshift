@@ -2,6 +2,8 @@
 
 Command-line tool that transforms source code files into any language.
 
+![Made with VHS](https://vhs.charm.sh/vhs-3WycnrVtNVBvM390BxtKUc.gif)
+
 ## Features
 
 - Accepts multiple input files
