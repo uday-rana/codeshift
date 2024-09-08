@@ -5,8 +5,9 @@ Command-line tool that transforms source code files into any language.
 ## Features
 
 - Accepts multiple input files
-- Evaluates source files individually (Does not support shared context)
+- Can output to specified file
 - Streams responses to `stdout`
+- Evaluates source files individually (Does not support shared context... yet)
 
 ## Installation
 
