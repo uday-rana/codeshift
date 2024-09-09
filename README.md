@@ -6,10 +6,10 @@ Command-line tool that transforms source code files into any language.
 
 ## Features
 
-- Accepts multiple input files
-- Can output to specified file
-- Streams responses to `stdout`
-- Evaluates source files individually (Does not support shared context... yet)
+- Accepts multiple file input
+- Streams output to `stdout`
+- Can choose output language
+- Can specify file path to write output to file
 
 ## Installation
 
