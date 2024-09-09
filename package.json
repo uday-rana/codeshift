@@ -3,8 +3,7 @@
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
-  "bin": 
-  {
+  "bin": {
     "codeshift": "./src/index.js"
   },
   "directories": {
