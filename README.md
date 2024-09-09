@@ -6,7 +6,7 @@ Command-line tool that transforms source code files into any language.
 
 ## Features
 
-- Accepts multiple file input
+- Accepts multiple input files
 - Streams output to `stdout`
 - Can choose output language
 - Can specify file path to write output to file
