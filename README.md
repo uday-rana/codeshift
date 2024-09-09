@@ -34,5 +34,5 @@ Example: `codeshift -o index.ts typescript examples\index.js`
 
 ### Arguments
 
-- `<output-language>`: The desired language to convert source files to.
+- `<output-language>`: The desired language to convert source files to
 - `<input-files...>`: Paths to the source files, separated by spaces
