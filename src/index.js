@@ -8,7 +8,7 @@ const Groq = require("groq-sdk");
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
-// Set up program details for -h and -v
+// Set up program details for -h and -v options
 program
   .name("codeshift")
   .description("Transform code from one language to another")
