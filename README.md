@@ -10,7 +10,8 @@ Command-line tool that transforms source code files into any language.
 - Streams output to `stdout`
 - Can choose output language
 - Can specify file path to write output to file
-
+- Can use custom API key in `.env`
+- 
 ## Installation
 
 - Install [Node.js](https://nodejs.org/en)
