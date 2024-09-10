@@ -15,7 +15,7 @@ Command-line tool that transforms source code files into any language.
 ## Installation
 
 - Install [Node.js](https://nodejs.org/en)
-- Get a [Groq API key](https://console.groq.com/keys)
+- Get a [Groq API key](https://console.groq.com/docs/quickstart)
 - Clone repo with [Git](https://git-scm.com/) or download as a .zip
 - Within the repo directory containing `package.json`, run `npm install`
   - (Optional) Run `npm install -g .` to install the package globally (to let you run it without prefixing `node`)
