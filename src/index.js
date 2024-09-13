@@ -36,7 +36,7 @@ program
             process.stdout.write(chunkContent);
             response += chunkContent;
           }
-          await fs.writeFile(outputFile, response);
+          await fs.writeFile(outputFile, `${response}\n`);
         } else {
           for await (const chunk of reponseStream) {
             const chunkContent = chunk.choices[0]?.delta?.content || "";
