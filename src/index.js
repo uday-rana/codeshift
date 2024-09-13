@@ -8,12 +8,14 @@ const Groq = require("groq-sdk");
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
+// Set up program details for -h and -v options
 program
   .name("codeshift")
   .description("Transform code from one language to another")
   .version(`codeshift v${version}`, "-v, --version")
   .option("-o, --output <filename>", "specify filename to write output to");
 
+// Set up default command
 program
   .command("run", { isDefault: true })
   .description("default command")
@@ -22,6 +24,7 @@ program
   .action(async (outputLang, inputFiles) => {
     const outputFile = program.opts().output;
 
+		// Loop through file path args
     for (let filePath of inputFiles) {
       try {
         const fileContent = await fs.readFile(filePath, { encoding: "utf8" });
@@ -29,8 +32,11 @@ program
           fileContent,
           outputLang
         );
+				// Check if --output flag was used
         if (outputFile) {
           let response = "";
+					// Read response stream one chunk at a time
+					// Store chunks in `response` for writing to output file
           for await (const chunk of reponseStream) {
             const chunkContent = chunk.choices[0]?.delta?.content || "";
             process.stdout.write(chunkContent);
@@ -38,6 +44,7 @@ program
           }
           await fs.writeFile(outputFile, `${response}\n`);
         } else {
+					// If no output file specified, read stream without storing to a variable
           for await (const chunk of reponseStream) {
             const chunkContent = chunk.choices[0]?.delta?.content || "";
             process.stdout.write(chunkContent);
@@ -50,6 +57,7 @@ program
     }
   });
 
+// Set up call to Groq API
 async function getGroqChatStream(fileContent, outputLang) {
   return groq.chat.completions.create({
     messages: [
