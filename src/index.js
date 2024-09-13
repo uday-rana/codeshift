@@ -64,7 +64,9 @@ async function getGroqChatStream(fileContent, outputLang) {
       {
         role: "system",
         content:
-          "You will receive source code files and must convert them to the desired language. Do not include any sentences in your response. Your response must consist entirely of the requested code. Do not enclose your response in a codeblock."
+          `You will receive source code files and must convert them to the desired language.
+          Do not include any sentences in your response. Your response must consist entirely of the requested code.
+          Do not enclose your response in a codeblock.`
       },
       {
         role: "user",
