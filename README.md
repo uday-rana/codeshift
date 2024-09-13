@@ -18,7 +18,7 @@ Command-line tool that transforms source code files into any language.
 - Get a [Groq API key](https://console.groq.com/docs/quickstart)
 - Clone repo with [Git](https://git-scm.com/) or download as a .zip
 - Within the repo directory containing `package.json`, run `npm install`
-  - (Optional) Run `npm install -g .` to install the package globally (to let you run it without prefixing `node`)
+- To run the program without prefixing `node`, within the project directory, run `npm install -g .` or `npm link`
 - Create a file called `.env` and add your Groq API key: `GROQ_API_KEY=API_KEY_HERE`
 
 ## Usage
