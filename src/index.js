@@ -23,6 +23,19 @@ program
   .argument("<input-files...>", "source files to read")
   .action(async (outputLang, inputFiles) => {
     const outputFile = program.opts().output;
+    // Check if file exists and contains any data
+    if (outputFile) {
+      try {
+        const fileData = await fs.readFile(outputFile, {
+          encoding: "utf8",
+        });
+        if (fileData.trim() !== "") {
+          console.warn(`File ${outputFile} is not empty, appending data....`);
+        }
+      } catch (error) {
+        // File is non-existent or can't be read, no need to handle errors.
+      }
+    }
 
     // Loop through file path args
     for (let filePath of inputFiles) {
@@ -39,19 +52,7 @@ program
             process.stdout.write(chunkContent);
             response += chunkContent;
           }
-          // Check if file exists
-          try {
-            const fileData = await fs.readFile(outputFile, {
-              encoding: "utf8",
-            });
-            if (fileData.trim() !== "") {
-              console.warn(
-                `File ${outputFile} is not empty, appending data....`
-              );
-            }
-          } catch (error) {
-            // File is non-existent or can't be read, no need to handle errors.
-          }
+          // Append response data to output file
           await fs.appendFile(outputFile, `${response}\n`);
         } else {
           // If no output file specified, read stream without storing to a variable
