@@ -18,11 +18,11 @@ program
   .argument("<output-language>", "language to transform code to")
   .argument("<input-files...>", "source files to read")
   .action(async (outputLang, inputFiles) => {
-      if (!process.env.GROQ_API_KEY) {
+    if (!process.env.GROQ_API_KEY) {
       console.error(`Missing environment variable "GROQ_API_KEY"`);
       process.exit(1);
-      }
-  
+    }
+
     const outputFile = program.opts().output;
 
     // Check if file exists and contains any data
@@ -38,7 +38,7 @@ program
         // File is non-existent or can't be read, no need to handle errors.
       }
     }
-    
+
     const reportToken = program.opts().tokenUsage;
     let prompt_tokens, completion_tokens, total_tokens;
 
