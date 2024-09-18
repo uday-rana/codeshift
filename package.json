@@ -1,7 +1,7 @@
 {
   "name": "codeshift",
   "version": "0.0.1",
-  "description": "",
+  "description": "Transform code from one language to another",
   "main": "index.js",
   "bin": {
     "codeshift": "./src/index.js"
