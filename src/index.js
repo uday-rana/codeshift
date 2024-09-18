@@ -3,7 +3,7 @@
 require("dotenv").config();
 const fs = require("node:fs/promises");
 const { program } = require("commander");
-const { version } = require("../package.json");
+const { version, name } = require("../package.json");
 const Groq = require("groq-sdk");
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
@@ -12,7 +12,7 @@ const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 program
   .name("codeshift")
   .description("Transform code from one language to another")
-  .version(`codeshift v${version}`, "-v, --version")
+  .version(`${name} v${version}`, "-v, --version")
   .option("-o, --output <filename>", "specify filename to write output to")
   .argument("<output-language>", "language to transform code to")
   .argument("<input-files...>", "source files to read")
