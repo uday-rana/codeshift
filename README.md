@@ -23,13 +23,13 @@ Command-line tool that transforms source code files into any language.
 
 ## Usage
 
-```
+```bash
 codeshift [-o <output-filename>] <output-language> <input-files...>
 ```
 
 ### Example
 
-```
+```bash
 codeshift -o index.go go examples/index.js
 ```
 
