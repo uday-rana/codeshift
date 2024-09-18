@@ -23,7 +23,7 @@ program
     for (let filePath of inputFiles) {
       try {
         const fileContent = await fs.readFile(filePath, { encoding: "utf8" });
-        const reponseStream = await getGroqChatStream(
+        const responseStream = await getGroqChatStream(
           fileContent,
           outputLang
         );
@@ -32,7 +32,7 @@ program
           let response = "";
 					// Read response stream one chunk at a time
 					// Store chunks in `response` for writing to output file
-          for await (const chunk of reponseStream) {
+          for await (const chunk of responseStream) {
             const chunkContent = chunk.choices[0]?.delta?.content || "";
             process.stdout.write(chunkContent);
             response += chunkContent;
@@ -40,7 +40,7 @@ program
           await fs.writeFile(outputFile, `${response}\n`);
         } else {
 					// If no output file specified, read stream without storing to a variable
-          for await (const chunk of reponseStream) {
+          for await (const chunk of responseStream) {
             const chunkContent = chunk.choices[0]?.delta?.content || "";
             process.stdout.write(chunkContent);
           }

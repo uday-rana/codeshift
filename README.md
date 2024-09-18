@@ -18,16 +18,20 @@ Command-line tool that transforms source code files into any language.
 - Get a [Groq API key](https://console.groq.com/docs/quickstart)
 - Clone repo with [Git](https://git-scm.com/) or download as a .zip
 - Within the repo directory containing `package.json`, run `npm install`
-  - (Optional) Run `npm install -g .` to install the package globally (to let you run it without prefixing `node`)
+- To run the program without prefixing `node`, within the project directory, run `npm install -g .` or `npm link`
 - Create a file called `.env` and add your Groq API key: `GROQ_API_KEY=API_KEY_HERE`
 
 ## Usage
 
-`codeshift [-o <output-filename>] <output-language> <input-files...>`
+```
+codeshift [-o <output-filename>] <output-language> <input-files...>
+```
 
 ### Example
 
-`codeshift -o index.go go examples/index.js`
+```
+codeshift -o index.go go examples/index.js
+```
 
 ![codeshift file output demo](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/tqlkq2d1495e6qps5wz3.gif)
 
