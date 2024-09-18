@@ -19,19 +19,21 @@ program
   .action(async (outputLang, inputFiles) => {
     const outputFile = program.opts().output;
 
-		// Loop through file path args
+    if (!process.env.GROQ_API_KEY) {
+      console.error(`Missing environment variable "GROQ_API_KEY"`);
+      process.exit(1);
+    }
+
+    // Loop through file path args
     for (let filePath of inputFiles) {
       try {
         const fileContent = await fs.readFile(filePath, { encoding: "utf8" });
-        const responseStream = await getGroqChatStream(
-          fileContent,
-          outputLang
-        );
-				// Check if --output flag was used
+        const responseStream = await getGroqChatStream(fileContent, outputLang);
+        // Check if --output flag was used
         if (outputFile) {
           let response = "";
-					// Read response stream one chunk at a time
-					// Store chunks in `response` for writing to output file
+          // Read response stream one chunk at a time
+          // Store chunks in `response` for writing to output file
           for await (const chunk of responseStream) {
             const chunkContent = chunk.choices[0]?.delta?.content || "";
             process.stdout.write(chunkContent);
@@ -39,7 +41,7 @@ program
           }
           await fs.writeFile(outputFile, `${response}\n`);
         } else {
-					// If no output file specified, read stream without storing to a variable
+          // If no output file specified, read stream without storing to a variable
           for await (const chunk of responseStream) {
             const chunkContent = chunk.choices[0]?.delta?.content || "";
             process.stdout.write(chunkContent);
@@ -58,10 +60,9 @@ async function getGroqChatStream(fileContent, outputLang) {
     messages: [
       {
         role: "system",
-        content:
-          `You will receive source code files and must convert them to the desired language.
+        content: `You will receive source code files and must convert them to the desired language.
           Do not include any sentences in your response. Your response must consist entirely of the requested code.
-          Do not enclose your response in a codeblock.`
+          Do not enclose your response in a codeblock.`,
       },
       {
         role: "user",
