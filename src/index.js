@@ -37,7 +37,8 @@ program
       } catch (error) {
         // File is non-existent or can't be read, no need to handle errors.
       }
-      
+    }
+    
     const reportToken = program.opts().tokenUsage;
     let prompt_tokens, completion_tokens, total_tokens;
 
