@@ -18,14 +18,28 @@ program
   .argument("<output-language>", "language to transform code to")
   .argument("<input-files...>", "source files to read")
   .action(async (outputLang, inputFiles) => {
-    const outputFile = program.opts().output;
-    const reportToken = program.opts().tokenUsage;
-    let prompt_tokens, completion_tokens, total_tokens;
-
-    if (!process.env.GROQ_API_KEY) {
+      if (!process.env.GROQ_API_KEY) {
       console.error(`Missing environment variable "GROQ_API_KEY"`);
       process.exit(1);
-    }
+      }
+  
+    const outputFile = program.opts().output;
+
+    // Check if file exists and contains any data
+    if (outputFile) {
+      try {
+        const fileData = await fs.readFile(outputFile, {
+          encoding: "utf8",
+        });
+        if (fileData.trim() !== "") {
+          console.warn(`File ${outputFile} is not empty, appending data....`);
+        }
+      } catch (error) {
+        // File is non-existent or can't be read, no need to handle errors.
+      }
+      
+    const reportToken = program.opts().tokenUsage;
+    let prompt_tokens, completion_tokens, total_tokens;
 
     // Loop through file path args
     for (let filePath of inputFiles) {
@@ -47,7 +61,8 @@ program
               total_tokens = chunk.x_groq.usage.total_tokens;
             }
           }
-          await fs.writeFile(outputFile, `${response}\n`);
+          // Append response data to output file
+          await fs.appendFile(outputFile, `${response}\n`);
         } else {
           // If no output file specified, read stream without storing to a variable
           for await (const chunk of responseStream) {
