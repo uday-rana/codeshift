@@ -13,12 +13,7 @@ program
   .name("codeshift")
   .description("Transform code from one language to another")
   .version(`codeshift v${version}`, "-v, --version")
-  .option("-o, --output <filename>", "specify filename to write output to");
-
-// Set up default command
-program
-  .command("run", { isDefault: true })
-  .description("default command")
+  .option("-o, --output <filename>", "specify filename to write output to")
   .argument("<output-language>", "language to transform code to")
   .argument("<input-files...>", "source files to read")
   .action(async (outputLang, inputFiles) => {
