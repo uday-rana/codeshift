@@ -39,7 +39,6 @@ program
             response += chunkContent;
           }
           await fs.writeFile(outputFile, `${response}\n`);
-          process.stdout.write(`Output written to ${outputFile}`);
         } else {
           // If no output file specified, read stream without storing to a variable
           for await (const chunk of responseStream) {
