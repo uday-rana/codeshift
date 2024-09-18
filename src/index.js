@@ -41,7 +41,7 @@ program
             const chunkContent = chunk.choices[0]?.delta?.content || "";
             process.stdout.write(chunkContent);
             response += chunkContent;
-            //Record tokens if report flag passed
+            // Record tokens if token-usage flag passed
             if (reportToken && chunk?.x_groq?.usage !== undefined) {
               prompt_tokens = chunk.x_groq.usage.prompt_tokens;
               completion_tokens = chunk.x_groq.usage.completion_tokens;
@@ -54,7 +54,7 @@ program
           for await (const chunk of responseStream) {
             const chunkContent = chunk.choices[0]?.delta?.content || "";
             process.stdout.write(chunkContent);
-            //Record tokens if report flag passed
+            // Record tokens if token-usage flag passed
             if (reportToken && chunk?.x_groq?.usage !== undefined) {
               prompt_tokens = chunk.x_groq.usage.prompt_tokens;
               completion_tokens = chunk.x_groq.usage.completion_tokens;
@@ -62,10 +62,14 @@ program
             }
           }
         }
+        // Output recorded tokens if token-usage flag passed
         if (reportToken) {
-          console.error(`\nPrompt tokens: ${prompt_tokens}`);
-          console.error(`Completion tokens: ${completion_tokens}`);
-          console.error(`Total tokens: ${total_tokens}`);
+          console.error(
+            "\nToken Usage Report:\n",
+            `Prompt tokens: ${prompt_tokens}\n`,
+            `Completion tokens: ${completion_tokens}\n`,
+            `Total tokens: ${total_tokens}`
+          );
         }
         process.stdout.write("\n");
       } catch (error) {
