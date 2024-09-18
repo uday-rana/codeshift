@@ -14,10 +14,13 @@ program
   .description("Transform code from one language to another")
   .version(`${name} v${version}`, "-v, --version")
   .option("-o, --output <filename>", "specify filename to write output to")
+  .option("-t, --token-usage", "report token usage")
   .argument("<output-language>", "language to transform code to")
   .argument("<input-files...>", "source files to read")
   .action(async (outputLang, inputFiles) => {
     const outputFile = program.opts().output;
+    const reportToken = program.opts().tokenUsage;
+    let prompt_tokens, completion_tokens, total_tokens;
 
     if (!process.env.GROQ_API_KEY) {
       console.error(`Missing environment variable "GROQ_API_KEY"`);
@@ -38,6 +41,12 @@ program
             const chunkContent = chunk.choices[0]?.delta?.content || "";
             process.stdout.write(chunkContent);
             response += chunkContent;
+            // Record tokens if token-usage flag passed
+            if (reportToken && chunk?.x_groq?.usage !== undefined) {
+              prompt_tokens = chunk.x_groq.usage.prompt_tokens;
+              completion_tokens = chunk.x_groq.usage.completion_tokens;
+              total_tokens = chunk.x_groq.usage.total_tokens;
+            }
           }
           await fs.writeFile(outputFile, `${response}\n`);
         } else {
@@ -45,7 +54,22 @@ program
           for await (const chunk of responseStream) {
             const chunkContent = chunk.choices[0]?.delta?.content || "";
             process.stdout.write(chunkContent);
+            // Record tokens if token-usage flag passed
+            if (reportToken && chunk?.x_groq?.usage !== undefined) {
+              prompt_tokens = chunk.x_groq.usage.prompt_tokens;
+              completion_tokens = chunk.x_groq.usage.completion_tokens;
+              total_tokens = chunk.x_groq.usage.total_tokens;
+            }
           }
+        }
+        // Output recorded tokens if token-usage flag passed
+        if (reportToken) {
+          console.error(
+            "\nToken Usage Report:\n",
+            `Prompt tokens: ${prompt_tokens}\n`,
+            `Completion tokens: ${completion_tokens}\n`,
+            `Total tokens: ${total_tokens}`
+          );
         }
         process.stdout.write("\n");
       } catch (error) {
