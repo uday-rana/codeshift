@@ -39,8 +39,8 @@ codeshift -o index.go go examples/index.js
 
 - `-o, --output`: Specify filename to write output to
 - `-h, --help`: Display help for a command
-- `-v, --version`: Output the version number
-- `-t, --token-usage`: Output the number of tokens used
+- `-v, --version`: Display the program name and version number
+- `-t, --token-usage`: Display the number of tokens used
 
 ### Arguments
 
