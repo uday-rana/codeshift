@@ -3,15 +3,15 @@
 require("dotenv").config();
 const fs = require("node:fs/promises");
 const { program } = require("commander");
-const { version, name } = require("../package.json");
+const { version, name, description } = require("../package.json");
 const Groq = require("groq-sdk");
 
 const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 // Set up program details for -h and -v options
 program
-  .name("codeshift")
-  .description("Transform code from one language to another")
+  .name(name)
+  .description(description)
   .version(`${name} v${version}`, "-v, --version")
   .option("-o, --output <filename>", "specify filename to write output to")
   .option("-t, --token-usage", "report token usage")
