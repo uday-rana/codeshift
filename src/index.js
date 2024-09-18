@@ -39,7 +39,6 @@ program
           // Store chunks in `response` for writing to output file
           for await (const chunk of responseStream) {
             const chunkContent = chunk.choices[0]?.delta?.content || "";
-            process.stdout.write(chunkContent);
             response += chunkContent;
             // Record tokens if token-usage flag passed
             if (reportToken && chunk?.x_groq?.usage !== undefined) {
