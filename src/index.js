@@ -19,8 +19,7 @@ program
   .argument("<input-files...>", "source files to read")
   .action(async (outputLang, inputFiles) => {
     if (!process.env.GROQ_API_KEY) {
-      console.error(`Missing environment variable "GROQ_API_KEY"`);
-      process.exit(1);
+      throw new Error(`missing expected env var: "GROQ_API_KEY"`);
     }
 
     const outputFile = program.opts().output;
