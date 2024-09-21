@@ -26,6 +26,7 @@ program
 
     const tokenUsageRequested = program.opts().tokenUsage;
     let promptTokens = 0, completionTokens = 0, totalTokens = 0;
+    let output = "";
 
     // Loop through file path args
     for (let filePath of inputFiles) {
@@ -34,12 +35,11 @@ program
         const responseStream = await getGroqChatStream(fileContent, outputLang);
         // Check if --output flag was used
         if (outputFile) {
-          let response = "";
           // Read response stream one chunk at a time
           // Store chunks in `response` for writing to output file
           for await (const chunk of responseStream) {
             const chunkContent = chunk.choices[0]?.delta?.content || "";
-            response += chunkContent;
+            output += chunkContent;
             // Record tokens if token-usage flag passed
             if (tokenUsageRequested && chunk?.x_groq?.usage !== undefined) {
               promptTokens += chunk.x_groq.usage.prompt_tokens;
@@ -47,8 +47,6 @@ program
               totalTokens += chunk.x_groq.usage.total_tokens;
             }
           }
-          // Append response data to output file
-          await fs.appendFile(outputFile, `${response}\n`);
         } else {
           // If no output file specified, read stream without storing to a variable
           for await (const chunk of responseStream) {
@@ -66,6 +64,10 @@ program
       } catch (error) {
         console.error(error);
       }
+    }
+    if (outputFile) {
+      // Write response data to output file
+      await fs.writeFile(outputFile, `${}\n`);
     }
     // Output recorded tokens if token-usage flag passed
     if (tokenUsageRequested) {
