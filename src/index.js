@@ -67,7 +67,7 @@ program
     }
     if (outputFile) {
       // Write response data to output file
-      await fs.writeFile(outputFile, `${}\n`);
+      await fs.writeFile(outputFile, `${output}\n`);
     }
     // Output recorded tokens if token-usage flag passed
     if (tokenUsageRequested) {
