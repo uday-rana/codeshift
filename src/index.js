@@ -45,10 +45,13 @@ program
     // Send request to Groq
     const responseStream = await getGroqChatStream(prompt);
 
+    // Write to either output file or stdout
     if (outputFilePath) {
       // Read response stream chunk by chunk
       for await (const chunk of responseStream) {
+        // Concatenate chunk to response
         response += chunk.choices[0]?.delta?.content || "";
+        // Aggregate token count
         if (chunk?.x_groq?.usage) {
           promptTokens += chunk.x_groq.usage.prompt_tokens;
           completionTokens += chunk.x_groq.usage.completion_tokens;
@@ -59,8 +62,10 @@ program
     } else {
       // Read response stream chunk by chunk
       for await (const chunk of responseStream) {
+        // Write chunk to stdout
         process.stdout.write(chunk.choices[0]?.delta?.content || "");
         if (chunk?.x_groq?.usage) {
+          // Aggregate token count
           promptTokens += chunk.x_groq.usage.prompt_tokens;
           completionTokens += chunk.x_groq.usage.completion_tokens;
           totalTokens += chunk.x_groq.usage.total_tokens;
