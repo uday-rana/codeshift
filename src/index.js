@@ -39,7 +39,7 @@ program
     }
 
     const reportToken = program.opts().tokenUsage;
-    let prompt_tokens, completion_tokens, total_tokens;
+    let promptTokens = 0, completionTokens = 0, totalTokens = 0;
 
     // Loop through file path args
     for (let filePath of inputFiles) {
@@ -56,9 +56,9 @@ program
             response += chunkContent;
             // Record tokens if token-usage flag passed
             if (reportToken && chunk?.x_groq?.usage !== undefined) {
-              prompt_tokens = chunk.x_groq.usage.prompt_tokens;
-              completion_tokens = chunk.x_groq.usage.completion_tokens;
-              total_tokens = chunk.x_groq.usage.total_tokens;
+              promptTokens += chunk.x_groq.usage.prompt_tokens;
+              completionTokens += chunk.x_groq.usage.completion_tokens;
+              totalTokens += chunk.x_groq.usage.total_tokens;
             }
           }
           // Append response data to output file
@@ -70,25 +70,25 @@ program
             process.stdout.write(chunkContent);
             // Record tokens if token-usage flag passed
             if (reportToken && chunk?.x_groq?.usage !== undefined) {
-              prompt_tokens = chunk.x_groq.usage.prompt_tokens;
-              completion_tokens = chunk.x_groq.usage.completion_tokens;
-              total_tokens = chunk.x_groq.usage.total_tokens;
+              promptTokens += chunk.x_groq.usage.prompt_tokens;
+              completionTokens += chunk.x_groq.usage.completion_tokens;
+              totalTokens += chunk.x_groq.usage.total_tokens;
             }
           }
-        }
-        // Output recorded tokens if token-usage flag passed
-        if (reportToken) {
-          console.error(
-            "\nToken Usage Report:\n",
-            `Prompt tokens: ${prompt_tokens}\n`,
-            `Completion tokens: ${completion_tokens}\n`,
-            `Total tokens: ${total_tokens}`
-          );
         }
         process.stdout.write("\n");
       } catch (error) {
         console.error(error);
       }
+    }
+    // Output recorded tokens if token-usage flag passed
+    if (reportToken) {
+      console.error(
+        "\nToken Usage Report:\n",
+        `Prompt tokens: ${promptTokens}\n`,
+        `Completion tokens: ${completionTokens}\n`,
+        `Total tokens: ${totalTokens}`
+      );
     }
   });
 
