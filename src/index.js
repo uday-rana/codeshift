@@ -24,20 +24,6 @@ program
 
     const outputFile = program.opts().output;
 
-    // Check if file exists and contains any data
-    if (outputFile) {
-      try {
-        const fileData = await fs.readFile(outputFile, {
-          encoding: "utf8",
-        });
-        if (fileData.trim() !== "") {
-          console.warn(`File ${outputFile} is not empty, appending data....`);
-        }
-      } catch (error) {
-        // File is non-existent or can't be read, no need to handle errors.
-      }
-    }
-
     const tokenUsageRequested = program.opts().tokenUsage;
     let promptTokens = 0, completionTokens = 0, totalTokens = 0;
 
