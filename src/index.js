@@ -38,7 +38,7 @@ program
       }
     }
 
-    const reportToken = program.opts().tokenUsage;
+    const tokenUsageRequested = program.opts().tokenUsage;
     let promptTokens = 0, completionTokens = 0, totalTokens = 0;
 
     // Loop through file path args
@@ -55,7 +55,7 @@ program
             const chunkContent = chunk.choices[0]?.delta?.content || "";
             response += chunkContent;
             // Record tokens if token-usage flag passed
-            if (reportToken && chunk?.x_groq?.usage !== undefined) {
+            if (tokenUsageRequested && chunk?.x_groq?.usage !== undefined) {
               promptTokens += chunk.x_groq.usage.prompt_tokens;
               completionTokens += chunk.x_groq.usage.completion_tokens;
               totalTokens += chunk.x_groq.usage.total_tokens;
@@ -69,7 +69,7 @@ program
             const chunkContent = chunk.choices[0]?.delta?.content || "";
             process.stdout.write(chunkContent);
             // Record tokens if token-usage flag passed
-            if (reportToken && chunk?.x_groq?.usage !== undefined) {
+            if (tokenUsageRequested && chunk?.x_groq?.usage !== undefined) {
               promptTokens += chunk.x_groq.usage.prompt_tokens;
               completionTokens += chunk.x_groq.usage.completion_tokens;
               totalTokens += chunk.x_groq.usage.total_tokens;
@@ -82,7 +82,7 @@ program
       }
     }
     // Output recorded tokens if token-usage flag passed
-    if (reportToken) {
+    if (tokenUsageRequested) {
       console.error(
         "\nToken Usage Report:\n",
         `Prompt tokens: ${promptTokens}\n`,
