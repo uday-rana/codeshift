@@ -35,7 +35,7 @@ program
     let response = "";
 
     // Loop through input files and add them to prompt
-    for (let inputFilePath of inputFiles) {
+    for (const inputFilePath of inputFiles) {
       const inputFileContent = await fs.readFile(inputFilePath, {
         encoding: "utf8",
       });
