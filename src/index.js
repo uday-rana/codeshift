@@ -22,67 +22,59 @@ program
       throw new Error(`missing expected env var: "GROQ_API_KEY"`);
     }
 
-    const outputFile = program.opts().output;
+    const outputFilePath = program.opts().output;
+    const tokenUsageRequested = program.opts().tokenUsage;
 
-    // Check if file exists and contains any data
-    if (outputFile) {
-      try {
-        const fileData = await fs.readFile(outputFile, {
-          encoding: "utf8",
-        });
-        if (fileData.trim() !== "") {
-          console.warn(`File ${outputFile} is not empty, appending data....`);
-        }
-      } catch (error) {
-        // File is non-existent or can't be read, no need to handle errors.
-      }
+    let promptTokens = 0;
+    let completionTokens = 0;
+    let totalTokens = 0;
+
+    let prompt = `Convert the following source code files to ${outputLang}. 
+          Do not include any sentences in your response. Your response must consist entirely of the requested code.
+          Do not use backticks (\`) to enclose the code in your response.\n\n`;
+    let response = "";
+
+    // Loop through input files and add them to prompt
+    for (const inputFilePath of inputFiles) {
+      const inputFileContent = await fs.readFile(inputFilePath, {
+        encoding: "utf8",
+      });
+      prompt = prompt.concat(`${inputFilePath}:\n`, `\`\`\`\n${inputFileContent}\`\`\`\n`);
     }
 
-    const reportToken = program.opts().tokenUsage;
-    let promptTokens = 0, completionTokens = 0, totalTokens = 0;
+    // Send request to Groq
+    const responseStream = await getGroqChatStream(prompt);
 
-    // Loop through file path args
-    for (let filePath of inputFiles) {
-      try {
-        const fileContent = await fs.readFile(filePath, { encoding: "utf8" });
-        const responseStream = await getGroqChatStream(fileContent, outputLang);
-        // Check if --output flag was used
-        if (outputFile) {
-          let response = "";
-          // Read response stream one chunk at a time
-          // Store chunks in `response` for writing to output file
-          for await (const chunk of responseStream) {
-            const chunkContent = chunk.choices[0]?.delta?.content || "";
-            response += chunkContent;
-            // Record tokens if token-usage flag passed
-            if (reportToken && chunk?.x_groq?.usage !== undefined) {
-              promptTokens += chunk.x_groq.usage.prompt_tokens;
-              completionTokens += chunk.x_groq.usage.completion_tokens;
-              totalTokens += chunk.x_groq.usage.total_tokens;
-            }
-          }
-          // Append response data to output file
-          await fs.appendFile(outputFile, `${response}\n`);
-        } else {
-          // If no output file specified, read stream without storing to a variable
-          for await (const chunk of responseStream) {
-            const chunkContent = chunk.choices[0]?.delta?.content || "";
-            process.stdout.write(chunkContent);
-            // Record tokens if token-usage flag passed
-            if (reportToken && chunk?.x_groq?.usage !== undefined) {
-              promptTokens += chunk.x_groq.usage.prompt_tokens;
-              completionTokens += chunk.x_groq.usage.completion_tokens;
-              totalTokens += chunk.x_groq.usage.total_tokens;
-            }
-          }
+    // Write to either output file or stdout
+    if (outputFilePath) {
+      // Read response stream chunk by chunk
+      for await (const chunk of responseStream) {
+        // Concatenate chunk to response
+        response += chunk.choices[0]?.delta?.content || "";
+        // Aggregate token count
+        if (chunk?.x_groq?.usage) {
+          promptTokens += chunk.x_groq.usage.prompt_tokens;
+          completionTokens += chunk.x_groq.usage.completion_tokens;
+          totalTokens += chunk.x_groq.usage.total_tokens;
         }
-        process.stdout.write("\n");
-      } catch (error) {
-        console.error(error);
       }
+      fs.writeFile(outputFilePath, `${response}`);
+    } else {
+      // Read response stream chunk by chunk
+      for await (const chunk of responseStream) {
+        // Write chunk to stdout
+        process.stdout.write(chunk.choices[0]?.delta?.content || "");
+        if (chunk?.x_groq?.usage) {
+          // Aggregate token count
+          promptTokens += chunk.x_groq.usage.prompt_tokens;
+          completionTokens += chunk.x_groq.usage.completion_tokens;
+          totalTokens += chunk.x_groq.usage.total_tokens;
+        }
+      }
+      process.stdout.write("\n");
     }
-    // Output recorded tokens if token-usage flag passed
-    if (reportToken) {
+
+    if (tokenUsageRequested) {
       console.error(
         "\nToken Usage Report:\n",
         `Prompt tokens: ${promptTokens}\n`,
@@ -93,20 +85,16 @@ program
   });
 
 // Set up call to Groq API
-async function getGroqChatStream(fileContent, outputLang) {
+async function getGroqChatStream(prompt) {
   return groq.chat.completions.create({
     messages: [
       {
         role: "system",
-        content: `You will receive source code files and must convert them to the desired language.
-          Do not include any sentences in your response. Your response must consist entirely of the requested code.
-          Do not enclose your response in a codeblock.`,
+        content: `You will receive source code files and must convert them to the desired language.`,
       },
       {
         role: "user",
-        content: `Convert the following code to ${outputLang}.
-			
-			${fileContent}`,
+        content: prompt,
       },
     ],
     model: "llama3-8b-8192",
