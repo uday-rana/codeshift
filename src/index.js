@@ -47,7 +47,7 @@ program
               totalTokens += chunk.x_groq.usage.total_tokens;
             }
           }
-          output += "\n";
+          output += "\n\n";
         } else {
           // If no output file specified, read stream without storing to a variable
           for await (const chunk of responseStream) {
