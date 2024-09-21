@@ -22,7 +22,7 @@ program
       throw new Error(`missing expected env var: "GROQ_API_KEY"`);
     }
 
-    const outputFile = program.opts().output;
+    const fileOutputRequested = program.opts().output;
 
     const tokenUsageRequested = program.opts().tokenUsage;
     let promptTokens = 0, completionTokens = 0, totalTokens = 0;
@@ -34,7 +34,7 @@ program
         const fileContent = await fs.readFile(filePath, { encoding: "utf8" });
         const responseStream = await getGroqChatStream(fileContent, outputLang);
         // Check if --output flag was used
-        if (outputFile) {
+        if (fileOutputRequested) {
           // Read response stream one chunk at a time
           // Store chunks in `response` for writing to output file
           for await (const chunk of responseStream) {
@@ -66,9 +66,9 @@ program
         console.error(error);
       }
     }
-    if (outputFile) {
+    if (fileOutputRequested) {
       // Write response data to output file
-      await fs.writeFile(outputFile, `${output}\n`);
+      await fs.writeFile(fileOutputRequested, `${output}\n`);
     }
     // Output recorded tokens if token-usage flag passed
     if (tokenUsageRequested) {
