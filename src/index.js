@@ -25,7 +25,9 @@ program
     const fileOutputRequested = program.opts().output;
 
     const tokenUsageRequested = program.opts().tokenUsage;
-    let promptTokens = 0, completionTokens = 0, totalTokens = 0;
+    let promptTokens = 0;
+    let completionTokens = 0;
+    let totalTokens = 0;
     let output = "";
 
     // Loop through file path args
