@@ -4,9 +4,12 @@ require("dotenv").config();
 const fs = require("node:fs/promises");
 const { program } = require("commander");
 const { version, name, description } = require("../package.json");
-const Groq = require("groq-sdk");
+const OpenAI = require("openai");
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
+const openai = new OpenAI({
+  baseURL: process.env.BASE_URL,
+  apiKey: process.env.API_KEY,
+});
 
 // Set up program details for -h and -v options
 program
@@ -18,8 +21,12 @@ program
   .argument("<output-language>", "language to transform code to")
   .argument("<input-files...>", "source files to read")
   .action(async (outputLang, inputFiles) => {
-    if (!process.env.GROQ_API_KEY) {
-      throw new Error(`missing expected env var: "GROQ_API_KEY"`);
+    if (!process.env.API_KEY) {
+      throw new Error(`missing expected env var: "API_KEY"`);
+    }
+
+    if (!process.env.BASE_URL) {
+      throw new Error(`missing expected env var: "BASE_URL"`);
     }
 
     const outputFilePath = program.opts().output;
@@ -39,44 +46,59 @@ program
       const inputFileContent = await fs.readFile(inputFilePath, {
         encoding: "utf8",
       });
-      prompt = prompt.concat(`${inputFilePath}:\n`, `\`\`\`\n${inputFileContent}\`\`\`\n`);
+      prompt = prompt.concat(
+        `${inputFilePath}:\n`,
+        `\`\`\`\n${inputFileContent}\`\`\`\n`
+      );
     }
 
-    // Send request to Groq
-    const responseStream = await getGroqChatStream(prompt);
+    // Send request to AI provider
+    const completion = await getAIChatStream(prompt);
 
     // Write to either output file or stdout
     if (outputFilePath) {
       // Read response stream chunk by chunk
-      for await (const chunk of responseStream) {
+      for await (const chunk of completion) {
         // Concatenate chunk to response
         response += chunk.choices[0]?.delta?.content || "";
-        // Aggregate token count
+        if (chunk?.usage) {
+          promptTokens = chunk.usage.prompt_tokens;
+          completionTokens = chunk.usage.completion_tokens;
+          totalTokens = chunk.usage.total_tokens;
+        }
         if (chunk?.x_groq?.usage) {
-          promptTokens += chunk.x_groq.usage.prompt_tokens;
-          completionTokens += chunk.x_groq.usage.completion_tokens;
-          totalTokens += chunk.x_groq.usage.total_tokens;
+          promptTokens = chunk.x_groq.usage.prompt_tokens;
+          completionTokens = chunk.x_groq.usage.completion_tokens;
+          totalTokens = chunk.x_groq.usage.total_tokens;
         }
       }
       fs.writeFile(outputFilePath, `${response}`);
     } else {
       // Read response stream chunk by chunk
-      for await (const chunk of responseStream) {
+      for await (const chunk of completion) {
         // Write chunk to stdout
         process.stdout.write(chunk.choices[0]?.delta?.content || "");
+        if (chunk?.usage) {
+          console.error(chunk.usage);
+          promptTokens = chunk.usage.prompt_tokens;
+          completionTokens = chunk.usage.completion_tokens;
+          totalTokens = chunk.usage.total_tokens;
+        }
         if (chunk?.x_groq?.usage) {
-          // Aggregate token count
-          promptTokens += chunk.x_groq.usage.prompt_tokens;
-          completionTokens += chunk.x_groq.usage.completion_tokens;
-          totalTokens += chunk.x_groq.usage.total_tokens;
+          promptTokens = chunk.x_groq.usage.prompt_tokens;
+          completionTokens = chunk.x_groq.usage.completion_tokens;
+          totalTokens = chunk.x_groq.usage.total_tokens;
         }
       }
       process.stdout.write("\n");
     }
 
     if (tokenUsageRequested) {
+      if (promptTokens == 0 && completionTokens == 0 && totalTokens == 0) {
+        console.error(`\n No Token Usage returned by model.`);
+      }
       console.error(
-        "\nToken Usage Report:\n",
+        `\nToken Usage Report:\n`,
         `Prompt tokens: ${promptTokens}\n`,
         `Completion tokens: ${completionTokens}\n`,
         `Total tokens: ${totalTokens}`
@@ -84,9 +106,9 @@ program
     }
   });
 
-// Set up call to Groq API
-async function getGroqChatStream(prompt) {
-  return groq.chat.completions.create({
+// Set up call to provider API
+async function getAIChatStream(prompt) {
+  return openai.chat.completions.create({
     messages: [
       {
         role: "system",
@@ -100,6 +122,9 @@ async function getGroqChatStream(prompt) {
     model: "llama3-8b-8192",
     max_tokens: 1024,
     stream: true,
+    stream_options: {
+      include_usage: true,
+    },
   });
 }
 
