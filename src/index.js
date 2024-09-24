@@ -19,7 +19,8 @@ program
   .argument("<input-files...>", "source files to read")
   .action(async (outputLang, inputFiles) => {
     if (!process.env.GROQ_API_KEY) {
-      throw new Error(`missing expected env var: "GROQ_API_KEY"`);
+      console.error(`missing expected env var: "GROQ_API_KEY"`);
+      process.exit(20);
     }
 
     const outputFilePath = program.opts().output;
@@ -34,44 +35,63 @@ program
           Do not use backticks (\`) to enclose the code in your response.\n\n`;
     let response = "";
 
-    // Loop through input files and add them to prompt
-    for (const inputFilePath of inputFiles) {
-      const inputFileContent = await fs.readFile(inputFilePath, {
-        encoding: "utf8",
-      });
-      prompt = prompt.concat(`${inputFilePath}:\n`, `\`\`\`\n${inputFileContent}\`\`\`\n`);
+    try {
+      // Loop through input files and add them to prompt
+      for (const inputFilePath of inputFiles) {
+        const inputFileContent = await fs.readFile(inputFilePath, {
+          encoding: "utf8",
+        });
+        prompt = prompt.concat(
+          `${inputFilePath}:\n`,
+          `\`\`\`\n${inputFileContent}\`\`\`\n`
+        );
+      }
+    } catch (error) {
+      console.error(`error reading input files: ${error}`);
+      process.exit(21);
     }
 
-    // Send request to Groq
-    const responseStream = await getGroqChatStream(prompt);
+    let responseStream;
+    try {
+      // Send request to Groq
+      responseStream = await getGroqChatStream(prompt);
+    } catch (error) {
+      console.error(`error getting response from provider: ${error}`);
+      process.exit(22);
+    }
 
-    // Write to either output file or stdout
-    if (outputFilePath) {
-      // Read response stream chunk by chunk
-      for await (const chunk of responseStream) {
-        // Concatenate chunk to response
-        response += chunk.choices[0]?.delta?.content || "";
-        // Aggregate token count
-        if (chunk?.x_groq?.usage) {
-          promptTokens += chunk.x_groq.usage.prompt_tokens;
-          completionTokens += chunk.x_groq.usage.completion_tokens;
-          totalTokens += chunk.x_groq.usage.total_tokens;
-        }
-      }
-      fs.writeFile(outputFilePath, `${response}`);
-    } else {
-      // Read response stream chunk by chunk
-      for await (const chunk of responseStream) {
-        // Write chunk to stdout
-        process.stdout.write(chunk.choices[0]?.delta?.content || "");
-        if (chunk?.x_groq?.usage) {
+    try {
+      // Write to either output file or stdout
+      if (outputFilePath) {
+        // Read response stream chunk by chunk
+        for await (const chunk of responseStream) {
+          // Concatenate chunk to response
+          response += chunk.choices[0]?.delta?.content || "";
           // Aggregate token count
-          promptTokens += chunk.x_groq.usage.prompt_tokens;
-          completionTokens += chunk.x_groq.usage.completion_tokens;
-          totalTokens += chunk.x_groq.usage.total_tokens;
+          if (chunk?.x_groq?.usage) {
+            promptTokens += chunk.x_groq.usage.prompt_tokens;
+            completionTokens += chunk.x_groq.usage.completion_tokens;
+            totalTokens += chunk.x_groq.usage.total_tokens;
+          }
         }
+        fs.writeFile(outputFilePath, `${response}`);
+      } else {
+        // Read response stream chunk by chunk
+        for await (const chunk of responseStream) {
+          // Write chunk to stdout
+          process.stdout.write(chunk.choices[0]?.delta?.content || "");
+          if (chunk?.x_groq?.usage) {
+            // Aggregate token count
+            promptTokens += chunk.x_groq.usage.prompt_tokens;
+            completionTokens += chunk.x_groq.usage.completion_tokens;
+            totalTokens += chunk.x_groq.usage.total_tokens;
+          }
+        }
+        process.stdout.write("\n");
       }
-      process.stdout.write("\n");
+    } catch (error) {
+      console.error(`error reading response stream: ${error}`);
+      process.exit(23);
     }
 
     if (tokenUsageRequested) {
