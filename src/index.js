@@ -29,6 +29,10 @@ program
       throw new Error(`missing expected env var: "BASE_URL"`);
     }
 
+    if (!process.env.MODEL) {
+      throw new Error(`missing expected env var: "MODEL"`);
+    }
+
     const outputFilePath = program.opts().output;
     const tokenUsageRequested = program.opts().tokenUsage;
 
@@ -53,7 +57,7 @@ program
     }
 
     // Send request to AI provider
-    const completion = await getAIChatStream(prompt);
+    const completion = await getAIChatStream(prompt, process.env.MODEL);
 
     // Write to either output file or stdout
     if (outputFilePath) {
@@ -107,7 +111,7 @@ program
   });
 
 // Set up call to provider API
-async function getAIChatStream(prompt) {
+async function getAIChatStream(prompt, model) {
   return openai.chat.completions.create({
     messages: [
       {
@@ -119,7 +123,7 @@ async function getAIChatStream(prompt) {
         content: prompt,
       },
     ],
-    model: "llama3-8b-8192",
+    model: model,
     max_tokens: 1024,
     stream: true,
     stream_options: {
