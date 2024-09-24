@@ -132,7 +132,6 @@ program
           // Write chunk to stdout
           process.stdout.write(chunk.choices[0]?.delta?.content || "");
           if (chunk?.usage) {
-            console.error(chunk.usage);
             promptTokens = chunk.usage.prompt_tokens;
             completionTokens = chunk.usage.completion_tokens;
             totalTokens = chunk.usage.total_tokens;
