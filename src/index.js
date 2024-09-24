@@ -38,7 +38,8 @@ program
   .argument("<input-files...>", "source files to read")
   .action(async (outputLang, inputFiles) => {
     if (!process.env.API_KEY) {
-      throw new Error(`missing expected env var: "API_KEY"`);
+      console.error(`missing expected env var: "API_KEY"`);
+      process.exit(20);
     }
 
     if (!process.env.BASE_URL) {
@@ -81,56 +82,72 @@ program
           Do not use backticks (\`) to enclose the code in your response.\n\n`;
     let response = "";
 
-    // Loop through input files and add them to prompt
-    for (const inputFilePath of inputFiles) {
-      const inputFileContent = await fs.readFile(inputFilePath, {
-        encoding: "utf8",
-      });
-      prompt = prompt.concat(
-        `${inputFilePath}:\n`,
-        `\`\`\`\n${inputFileContent}\`\`\`\n`
-      );
+    try {
+      // Loop through input files and add them to prompt
+      for (const inputFilePath of inputFiles) {
+        const inputFileContent = await fs.readFile(inputFilePath, {
+          encoding: "utf8",
+        });
+        prompt = prompt.concat(
+          `${inputFilePath}:\n`,
+          `\`\`\`\n${inputFileContent}\`\`\`\n`
+        );
+      }
+    } catch (error) {
+      console.error(`error reading input files: ${error}`);
+      process.exit(21);
     }
 
-    // Send request to AI provider
-    const completion = await getAIChatStream(prompt, model);
+    let responseStream;
+    try {
+      // Send request to AI provider
+      completion = await getAIChatStream(prompt, model);
+    } catch (error) {
+      console.error(`error getting response from provider: ${error}`);
+      process.exit(22);
+    }
 
-    // Write to either output file or stdout
-    if (outputFilePath) {
-      // Read response stream chunk by chunk
-      for await (const chunk of completion) {
-        // Concatenate chunk to response
-        response += chunk.choices[0]?.delta?.content || "";
-        if (chunk?.usage) {
+    try {
+      // Write to either output file or stdout
+      if (outputFilePath) {
+        // Read response stream chunk by chunk
+        for await (const chunk of completion) {
+          // Concatenate chunk to response
+          response += chunk.choices[0]?.delta?.content || "";
+          if (chunk?.usage) {
           promptTokens = chunk.usage.prompt_tokens;
           completionTokens = chunk.usage.completion_tokens;
           totalTokens = chunk.usage.total_tokens;
         }
-        if (chunk?.x_groq?.usage) {
-          promptTokens = chunk.x_groq.usage.prompt_tokens;
-          completionTokens = chunk.x_groq.usage.completion_tokens;
-          totalTokens = chunk.x_groq.usage.total_tokens;
+          if (chunk?.x_groq?.usage) {
+            promptTokens = chunk.x_groq.usage.prompt_tokens;
+            completionTokens = chunk.x_groq.usage.completion_tokens;
+            totalTokens = chunk.x_groq.usage.total_tokens;
+          }
         }
-      }
-      fs.writeFile(outputFilePath, `${response}`);
-    } else {
-      // Read response stream chunk by chunk
-      for await (const chunk of completion) {
-        // Write chunk to stdout
-        process.stdout.write(chunk.choices[0]?.delta?.content || "");
-        if (chunk?.usage) {
+        fs.writeFile(outputFilePath, `${response}`);
+      } else {
+        // Read response stream chunk by chunk
+        for await (const chunk of completion) {
+          // Write chunk to stdout
+          process.stdout.write(chunk.choices[0]?.delta?.content || "");
+          if (chunk?.usage) {
           console.error(chunk.usage);
           promptTokens = chunk.usage.prompt_tokens;
           completionTokens = chunk.usage.completion_tokens;
           totalTokens = chunk.usage.total_tokens;
         }
         if (chunk?.x_groq?.usage) {
-          promptTokens = chunk.x_groq.usage.prompt_tokens;
-          completionTokens = chunk.x_groq.usage.completion_tokens;
-          totalTokens = chunk.x_groq.usage.total_tokens;
+              promptTokens = chunk.x_groq.usage.prompt_tokens;
+            completionTokens = chunk.x_groq.usage.completion_tokens;
+            totalTokens = chunk.x_groq.usage.total_tokens;
+          }
         }
+        process.stdout.write("\n");
       }
-      process.stdout.write("\n");
+    } catch (error) {
+      console.error(`error reading response stream: ${error}`);
+      process.exit(23);
     }
 
     if (tokenUsageRequested) {
