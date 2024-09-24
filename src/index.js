@@ -43,7 +43,8 @@ program
     }
 
     if (!process.env.BASE_URL) {
-      throw new Error(`missing expected env var: "BASE_URL"`);
+      console.error(`missing expected env var: "BASE_URL"`);
+      process.exit(20);
     }
 
     // Check if provider is supported
