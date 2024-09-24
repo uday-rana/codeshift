@@ -115,10 +115,10 @@ program
           // Concatenate chunk to response
           response += chunk.choices[0]?.delta?.content || "";
           if (chunk?.usage) {
-          promptTokens = chunk.usage.prompt_tokens;
-          completionTokens = chunk.usage.completion_tokens;
-          totalTokens = chunk.usage.total_tokens;
-        }
+            promptTokens = chunk.usage.prompt_tokens;
+            completionTokens = chunk.usage.completion_tokens;
+            totalTokens = chunk.usage.total_tokens;
+          }
           if (chunk?.x_groq?.usage) {
             promptTokens = chunk.x_groq.usage.prompt_tokens;
             completionTokens = chunk.x_groq.usage.completion_tokens;
@@ -132,13 +132,13 @@ program
           // Write chunk to stdout
           process.stdout.write(chunk.choices[0]?.delta?.content || "");
           if (chunk?.usage) {
-          console.error(chunk.usage);
-          promptTokens = chunk.usage.prompt_tokens;
-          completionTokens = chunk.usage.completion_tokens;
-          totalTokens = chunk.usage.total_tokens;
-        }
-        if (chunk?.x_groq?.usage) {
-              promptTokens = chunk.x_groq.usage.prompt_tokens;
+            console.error(chunk.usage);
+            promptTokens = chunk.usage.prompt_tokens;
+            completionTokens = chunk.usage.completion_tokens;
+            totalTokens = chunk.usage.total_tokens;
+          }
+          if (chunk?.x_groq?.usage) {
+            promptTokens = chunk.x_groq.usage.prompt_tokens;
             completionTokens = chunk.x_groq.usage.completion_tokens;
             totalTokens = chunk.x_groq.usage.total_tokens;
           }
