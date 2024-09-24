@@ -11,6 +11,22 @@ const openai = new OpenAI({
   apiKey: process.env.API_KEY,
 });
 
+// Define supported providers, their base URLs, and their default models
+const providers = {
+  openai: {
+    baseURL: "https://api.openai.com/v1",
+    defaultModel: "gpt-4o-mini",
+  },
+  openrouter: {
+    baseURL: "https://openrouter.ai/api/v1",
+    defaultModel: "meta-llama/llama-3-8b-instruct:free",
+  },
+  groq: {
+    baseURL: "https://api.groq.com/openai/v1",
+    defaultModel: "llama3-8b-8192",
+  },
+};
+
 // Set up program details for -h and -v options
 program
   .name(name)
@@ -29,8 +45,28 @@ program
       throw new Error(`missing expected env var: "BASE_URL"`);
     }
 
-    if (!process.env.MODEL) {
-      throw new Error(`missing expected env var: "MODEL"`);
+    // Check if provider is supported
+    let isProviderSupported = false;
+    let defaultModel;
+
+    for (const providerKey in providers) {
+      if (process.env.BASE_URL.startsWith(providers[providerKey].baseURL)) {
+        isProviderSupported = true;
+        defaultModel = providers[providerKey].defaultModel;
+        break;
+      }
+    }
+
+    if (!isProviderSupported) {
+      console.warn(`Unsupported provider (BASE_URL). May cause errors.`);
+    }
+
+    let model = process.env.MODEL;
+    if (!model) {
+      if (!isProviderSupported) {
+        throw new Error(`Unsupported BASE_URL requires env var: "MODEL"`);
+      }
+      model = defaultModel;
     }
 
     const outputFilePath = program.opts().output;
@@ -57,7 +93,7 @@ program
     }
 
     // Send request to AI provider
-    const completion = await getAIChatStream(prompt, process.env.MODEL);
+    const completion = await getAIChatStream(prompt, model);
 
     // Write to either output file or stdout
     if (outputFilePath) {
