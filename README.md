@@ -22,7 +22,7 @@ Codeshift is a command-line tool to translate and transform source code files be
   - [OpenAI](https://platform.openai.com/)
   - [OpenRouter](https://openrouter.ai/)
   - [Groq](https://console.groq.com/docs/quickstart)
-  - any other AI provider compatible with OpenAI's client library
+  - any other AI provider compatible with OpenAI's chat completions API endpoint
 
 ## Installation
 
