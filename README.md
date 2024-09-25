@@ -41,7 +41,7 @@ cd codeshift/
 npm install
 ```
 
-- To run the program without prefixing `node`, within the project directory, run `npm install -g .` or `npm link`:
+- To be able to run the program without prefixing `node`, run `npm install -g .` or `npm link` within the project directory:
 
 ```bash
 npm install -g .
