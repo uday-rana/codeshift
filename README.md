@@ -28,24 +28,24 @@ Codeshift is a command-line tool to translate and transform source code files be
 
 - Clone the repository with [Git](https://git-scm.com/):
 
-```bash
-git clone https://github.com/uday-rana/codeshift.git
-```
+    ```bash
+    git clone https://github.com/uday-rana/codeshift.git
+    ```
 
-- Alternatively, download the repository as a .zip from the GitHub page and extract it
+  - Alternatively, download the repository as a .zip from the GitHub page and extract it
 
 - In the repository's root directory (where `package.json` is located), run `npm install`:
 
-```bash
-cd codeshift/
-npm install
-```
+    ```bash
+    cd codeshift/
+    npm install
+    ```
 
 - To be able to run the program without prefixing `node`, run `npm install -g .` or `npm link` within the project directory:
 
-```bash
-npm install -g .
-```
+    ```bash
+    npm install -g .
+    ```
 
 - Create a file called `.env` by copying the `.env.example` file
 
@@ -58,13 +58,13 @@ npm install -g .
     - [OpenRouter models](https://openrouter.ai/models)
     - [Groq models](https://console.groq.com/docs/models)
 
-```bash
-# .env
+    ```bash
+    # .env
 
-API_KEY=YOUR_API_KEY_HERE
-BASE_URL=https://api.groq.com/openai/v1
-MODEL=llama3-8b-8192
-```
+    API_KEY=YOUR_API_KEY_HERE
+    BASE_URL=https://api.groq.com/openai/v1
+    MODEL=llama3-8b-8192
+    ```
 
 ## Usage
 
