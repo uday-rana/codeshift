@@ -99,7 +99,7 @@ program
       process.exit(21);
     }
 
-    let responseStream;
+    let completion;
     try {
       // Send request to AI provider
       completion = await getAIChatStream(prompt, model);
