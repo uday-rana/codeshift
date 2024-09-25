@@ -34,7 +34,7 @@ We welcome contributions to improve codeshift! Whether it's reporting a bug, sug
 6. Push to your fork
 
     ```bash
-        git push origin feature/my-awesome-feature
+    git push origin feature/my-awesome-feature
     ```
 
 7. Submit a pull request
