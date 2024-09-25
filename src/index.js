@@ -74,14 +74,9 @@ program
     const outputFilePath = program.opts().output;
     const tokenUsageRequested = program.opts().tokenUsage;
 
-    let promptTokens = 0;
-    let completionTokens = 0;
-    let totalTokens = 0;
-
     let prompt = `Convert the following source code files to ${outputLang}. 
           Do not include any sentences in your response. Your response must consist entirely of the requested code.
           Do not use backticks (\`) to enclose the code in your response.\n\n`;
-    let response = "";
 
     try {
       // Loop through input files and add them to prompt
@@ -108,22 +103,26 @@ program
       process.exit(22);
     }
 
+    let promptTokensUsed = 0;
+    let completionTokensUsed = 0;
+    let totalTokensUsed = 0;
     try {
       // Write to either output file or stdout
       if (outputFilePath) {
+        let response = "";
         // Read response stream chunk by chunk
         for await (const chunk of completion) {
           // Concatenate chunk to response
           response += chunk.choices[0]?.delta?.content || "";
           if (chunk?.usage) {
-            promptTokens = chunk.usage.prompt_tokens;
-            completionTokens = chunk.usage.completion_tokens;
-            totalTokens = chunk.usage.total_tokens;
+            promptTokensUsed = chunk.usage.prompt_tokens;
+            completionTokensUsed = chunk.usage.completion_tokens;
+            totalTokensUsed = chunk.usage.total_tokens;
           }
           if (chunk?.x_groq?.usage) {
-            promptTokens = chunk.x_groq.usage.prompt_tokens;
-            completionTokens = chunk.x_groq.usage.completion_tokens;
-            totalTokens = chunk.x_groq.usage.total_tokens;
+            promptTokensUsed = chunk.x_groq.usage.prompt_tokens;
+            completionTokensUsed = chunk.x_groq.usage.completion_tokens;
+            totalTokensUsed = chunk.x_groq.usage.total_tokens;
           }
         }
         fs.writeFile(outputFilePath, `${response}`);
@@ -133,14 +132,14 @@ program
           // Write chunk to stdout
           process.stdout.write(chunk.choices[0]?.delta?.content || "");
           if (chunk?.usage) {
-            promptTokens = chunk.usage.prompt_tokens;
-            completionTokens = chunk.usage.completion_tokens;
-            totalTokens = chunk.usage.total_tokens;
+            promptTokensUsed = chunk.usage.prompt_tokens;
+            completionTokensUsed = chunk.usage.completion_tokens;
+            totalTokensUsed = chunk.usage.total_tokens;
           }
           if (chunk?.x_groq?.usage) {
-            promptTokens = chunk.x_groq.usage.prompt_tokens;
-            completionTokens = chunk.x_groq.usage.completion_tokens;
-            totalTokens = chunk.x_groq.usage.total_tokens;
+            promptTokensUsed = chunk.x_groq.usage.prompt_tokens;
+            completionTokensUsed = chunk.x_groq.usage.completion_tokens;
+            totalTokensUsed = chunk.x_groq.usage.total_tokens;
           }
         }
         process.stdout.write("\n");
@@ -151,14 +150,18 @@ program
     }
 
     if (tokenUsageRequested) {
-      if (promptTokens == 0 && completionTokens == 0 && totalTokens == 0) {
+      if (
+        promptTokensUsed == 0 &&
+        completionTokensUsed == 0 &&
+        totalTokensUsed == 0
+      ) {
         console.error(`\n No Token Usage returned by model.`);
       }
       console.error(
         `\nToken Usage Report:\n`,
-        `Prompt tokens: ${promptTokens}\n`,
-        `Completion tokens: ${completionTokens}\n`,
-        `Total tokens: ${totalTokens}`
+        `Prompt tokens: ${promptTokensUsed}\n`,
+        `Completion tokens: ${completionTokensUsed}\n`,
+        `Total tokens: ${totalTokensUsed}`
       );
     }
   });
