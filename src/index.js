@@ -9,7 +9,7 @@ const toml = require("smol-toml");
 const path = require("path");
 const os = require("os");
 
-const configFilePath = path.join(__dirname, "../.toml");
+const configFilePath = path.join(__dirname, "../.codeshift.toml");
 
 const openai = new OpenAI({
   baseURL: process.env.BASE_URL,
