@@ -1,0 +1,3 @@
+[settings]
+output="output.go"
+tokenUsage="True"
