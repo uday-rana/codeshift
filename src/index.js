@@ -8,8 +8,10 @@ const OpenAI = require("openai");
 const toml = require("smol-toml");
 const path = require("path");
 const os = require("os");
+const { Console } = require("node:console");
 
-const configFilePath = path.join(__dirname, "../.codeshift.toml");
+const homeDir = os.homedir();
+const configFilePath = path.join(homeDir, ".codeshift.toml");
 
 const openai = new OpenAI({
   baseURL: process.env.BASE_URL,
