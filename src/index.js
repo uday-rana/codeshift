@@ -8,7 +8,6 @@ const OpenAI = require("openai");
 const toml = require("smol-toml");
 const path = require("path");
 const os = require("os");
-const { Console } = require("node:console");
 
 const homeDir = os.homedir();
 const configFilePath = path.join(homeDir, ".codeshift.toml");
@@ -34,7 +33,7 @@ const providers = {
   },
 };
 
-// default values
+// Default values for command line options
 let defaultConfig = {};
 
 // Try to read TOML config file
