@@ -5,41 +5,44 @@ We welcome contributions to improve codeshift! Whether it's reporting a bug, sug
 ## How to Contribute
 
 1. Fork the repository
-    - Click the "Fork" button on the top right of the repository page.
+
+   - Click the "Fork" button on the top right of the repository page.
 
 2. Clone your fork
 
-    ```bash
-    git clone https://github.com/<your-username>/codeshift.git
-    cd codeshift
-    ```
+   ```bash
+   git clone https://github.com/<your-username>/codeshift.git
+   cd codeshift
+   ```
 
 3. Create a branch for your feature or fix
 
-    ```bash
-    git checkout -b feature/my-awesome-feature
-    ```
+   ```bash
+   git checkout -b feature/my-awesome-feature
+   ```
 
 4. Make your changes
-    - Ensure that your code follows the existing style and conventions.
-    - Run tests and ensure everything is working as expected.
+
+   - Ensure that your code follows the existing style and conventions.
+   - Run tests and ensure everything is working as expected.
 
 5. Commit your changes
-    - Follow the Conventional Commits format for commit messages.
 
-    ```bash
-    git commit -m "feat(scope): add new feature description"
-    ```
+   - Follow the Conventional Commits format for commit messages.
+
+   ```bash
+   git commit -m "feat(scope): add new feature description"
+   ```
 
 6. Push to your fork
 
-    ```bash
-    git push origin feature/my-awesome-feature
-    ```
+   ```bash
+   git push origin feature/my-awesome-feature
+   ```
 
 7. Submit a pull request
-    - Go to the original repository, navigate to the "Pull Requests" tab, and open a new pull request.
-    - Provide a clear description of your changes, explaining the problem it solves or the feature it adds.
+   - Go to the original repository, navigate to the "Pull Requests" tab, and open a new pull request.
+   - Provide a clear description of your changes, explaining the problem it solves or the feature it adds.
 
 ## Guidelines
 
