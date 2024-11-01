@@ -22,4 +22,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
       - run: npm ci
-      - run: npx prettier --check src/
+      - run: npx -y oxlint@0.10.3 --deny-warnings
+      - run: npx prettier --check .
+      - run: npx eslint

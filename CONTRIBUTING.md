@@ -15,20 +15,20 @@ We welcome contributions to improve codeshift! Whether it's reporting a bug, sug
    cd codeshift
    ```
 
-3. Create a branch for your feature or fix
+3. Create a branch for your change. Name your branch `issue-number` based on the issue number on GitHub. If your change doesn't have an issue, [create one](https://github.com/uday-rana/codeshift/issues).
 
    ```bash
-   git checkout -b feature/my-awesome-feature
+   git checkout -b issue-24
    ```
 
 4. Make your changes
 
    - Ensure that your code follows the existing style and conventions.
-   - Run tests and ensure everything is working as expected.
+   - Run `npm run lint` and `npm run prettier` to lint your code before committing changes.
 
 5. Commit your changes
 
-   - Follow the Conventional Commits format for commit messages.
+   - Follow the [Conventional Commits](https://www.conventionalcommits.org/) format for commit messages.
 
    ```bash
    git commit -m "feat(scope): add new feature description"
@@ -40,9 +40,10 @@ We welcome contributions to improve codeshift! Whether it's reporting a bug, sug
    git push origin feature/my-awesome-feature
    ```
 
-7. Submit a pull request
+7. [Submit a pull request](https://github.com/uday-rana/codeshift/pulls)
+
    - Go to the original repository, navigate to the "Pull Requests" tab, and open a new pull request.
-   - Provide a clear description of your changes, explaining the problem it solves or the feature it adds.
+   - Fill in the template. Link your issue using closing keywords, and provide a clear description of your changes.
 
 ## Guidelines
 
