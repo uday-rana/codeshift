@@ -13,8 +13,8 @@
   "license": "MIT",
   "lint-staged": {
     "**/*.": [
-      "oxlint",
       "prettier --write --ignore-unknown",
+      "oxlint",
       "eslint"
     ]
   },
