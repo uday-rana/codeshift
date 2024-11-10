@@ -25,6 +25,7 @@ We welcome contributions to improve codeshift! Whether it's reporting a bug, sug
 
    - Ensure that your code follows the existing style and conventions.
    - Run `npm run lint` and `npm run prettier` to lint your code before committing changes.
+   - Run `npm run test` to ensure all tests pass.
 
 5. Commit your changes
 
@@ -44,6 +45,14 @@ We welcome contributions to improve codeshift! Whether it's reporting a bug, sug
 
    - Go to the original repository, navigate to the "Pull Requests" tab, and open a new pull request.
    - Fill in the template. Link your issue using closing keywords, and provide a clear description of your changes.
+
+### Contributing Tests
+
+Tests for codeshift are written using [Jest](https://jestjs.io/). They are placed under the `tests/unit` directory and are named after the module they test. For example, `tests/unit/model.test.js` tests `src/model.js`.
+
+- To run tests, use `npm run test`.
+- To run tests, and re-run them on changes to the tests or source code, use `npm run test:watch`.
+- To generate a test coverage report to ensure all branches of code are being tested, use `npm run test:coverage`.
 
 ## Guidelines
 

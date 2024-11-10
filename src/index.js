@@ -18,6 +18,7 @@ program
     config?.output,
   )
   .option("-t, --token-usage", "report token usage", config?.tokenUsage)
+  .option("-s, --stream", "stream the response", config?.streamResponse)
   .argument("<output-language>", "language to transform code to")
   .argument("<input-files...>", "source files to read")
   .action(async (outputLang, inputFiles) => {

@@ -10,5 +10,5 @@
   "editor.tabSize": 2,
   "files.eol": "\n",
   "files.insertFinalNewline": true,
-  "cSpell.words": ["codeshift", "openai", "oxlint", "smol"]
+  "cSpell.words": ["codeshift", "groq", "openai", "oxlint", "smol"]
 }

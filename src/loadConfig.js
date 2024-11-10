@@ -22,11 +22,9 @@ const configFilePath = path.join(homeDir, ".codeshift.toml");
  */
 async function loadConfig() {
   try {
-    if (await fs.stat(configFilePath)) {
-      const fileContent = await fs.readFile(configFilePath, "utf-8");
-      const parsedConfig = toml.parse(fileContent);
-      return parsedConfig.settings;
-    }
+    const fileContent = await fs.readFile(configFilePath, "utf-8");
+    const parsedConfig = toml.parse(fileContent);
+    return parsedConfig.settings;
   } catch (err) {
     if (err.code !== "ENOENT") {
       console.error(

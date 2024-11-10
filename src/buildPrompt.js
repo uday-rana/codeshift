@@ -15,9 +15,9 @@ const fs = require("node:fs/promises");
  * @throws Will terminate the process with exit code 21 if reading any input file fails.
  */
 async function buildPrompt(outputLang, inputFiles) {
-  let prompt = `Convert the following source code files to ${outputLang}. 
-	Do not include any sentences in your response. Your response must consist entirely of the requested code.
-	Do not use backticks (\`) to enclose the code in your response.\n\n`;
+  let prompt = `Convert the following source code files to ${outputLang}. \
+Do not include any sentences in your response. Your response must consist entirely of the requested code. \
+Do not use backticks (\`) to enclose the code in your response.\n\n`;
 
   try {
     // Loop through input files and add them to prompt
