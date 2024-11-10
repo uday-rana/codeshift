@@ -12,7 +12,7 @@
   "author": "Uday Rana",
   "license": "MIT",
   "lint-staged": {
-    "**/*.": [
+    "**/*": [
       "prettier --write --ignore-unknown",
       "oxlint",
       "eslint"
