@@ -29,6 +29,7 @@ jobs:
 
   unit-tests:
     name: Unit tests
+    needs: lint-format
     runs-on: ubuntu-latest
 
     strategy:
