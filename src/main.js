@@ -16,11 +16,10 @@ const writeOutput = require("./writeOutput");
  * @param {boolean} [options.tokenUsage=false] - Whether to track and log token usage statistics.
  * @param {string} outputLang - The language for the output content (e.g., "en", "fr").
  * @param {string[]} inputFiles - List of paths to input files to be processed.
- * @param {boolean} streamResponse - Whether to return the response as a stream.
  * @throws Will terminate the process with exit code 20 if required environment variables
  * (`API_KEY` or `BASE_URL`) are missing.
  */
-async function main(options, outputLang, inputFiles, streamResponse) {
+async function main(options, outputLang, inputFiles) {
   if (!process.env.API_KEY) {
     console.error(`missing expected env var: "API_KEY"`);
     process.exit(20);
@@ -33,14 +32,19 @@ async function main(options, outputLang, inputFiles, streamResponse) {
 
   const outputFilePath = options.output;
   const tokenUsageRequested = options.tokenUsage;
+  const streamResponseRequested = options.stream;
 
   const prompt = await buildPrompt(outputLang, inputFiles);
-  const completion = await getChatCompletion(prompt, model, streamResponse);
+  const completion = await getChatCompletion(
+    prompt,
+    model,
+    streamResponseRequested,
+  );
   await writeOutput(
     completion,
     outputFilePath,
     tokenUsageRequested,
-    streamResponse,
+    streamResponseRequested,
   );
 }
 

@@ -11,17 +11,17 @@ const fs = require("node:fs/promises");
  * @param {AsyncIterable<Object>} completion - The stream of completion response chunks from the API.
  * @param {string} [outputFilePath] - Path to the output file where the result will be saved. If not provided, writes to stdout.
  * @param {boolean} tokenUsageRequested - Whether to display token usage statistics after processing the completion stream.
- * @param {boolean} streamResponse - Whether to return the response as a stream
+ * @param {boolean} streamResponseRequested - Whether to return the response as a stream
  */
 async function writeOutput(
   completion,
   outputFilePath,
   tokenUsageRequested,
-  streamResponse,
+  streamResponseRequested,
 ) {
   let tokenUsage = { prompt_tokens: 0, completion_tokens: 0, total_tokens: 0 };
 
-  if (streamResponse) {
+  if (streamResponseRequested) {
     await processCompletionStream(
       completion,
       outputFilePath,
