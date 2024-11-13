@@ -146,4 +146,48 @@ describe("writeOutput() function", () => {
 
     exitSpy.mockRestore();
   });
+
+  test("Should handle Groq-specific token usage format in stream response", async () => {
+    const completion = [
+      {
+        choices: [{ delta: { content: "Content chunk" } }],
+        x_groq: {
+          usage: { prompt_tokens: 5, completion_tokens: 10, total_tokens: 15 },
+        },
+      },
+    ];
+
+    const consoleErrorSpy = jest.spyOn(console, "error").mockImplementation();
+
+    await writeOutput(completion, outputFilePath, true, true);
+
+    expect(consoleErrorSpy).toHaveBeenCalledWith(
+      `\nToken Usage Report:\n`,
+      `Prompt tokens: 5\n`,
+      `Completion tokens: 10\n`,
+      `Total tokens: 15`,
+    );
+
+    consoleErrorSpy.mockRestore();
+  });
+
+  test("Should handle empty content in stream response chunks", async () => {
+    const completion = [
+      { choices: [{ delta: {} }] },
+      { choices: [{ delta: { content: "Valid content" } }] },
+      { choices: [{ delta: { content: "" } }] },
+    ];
+
+    const stdoutSpy = jest.spyOn(process.stdout, "write").mockImplementation();
+
+    await writeOutput(completion, undefined, false, true);
+
+    expect(process.stdout.write).toHaveBeenCalledTimes(4);
+    expect(process.stdout.write).toHaveBeenCalledWith(""); // First empty chunk
+    expect(process.stdout.write).toHaveBeenCalledWith("Valid content");
+    expect(process.stdout.write).toHaveBeenCalledWith(""); // Third empty chunk
+    expect(process.stdout.write).toHaveBeenCalledWith("\n");
+
+    stdoutSpy.mockRestore();
+  });
 });
