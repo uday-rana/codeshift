@@ -4,13 +4,22 @@
   "description": "Transform code from one language to another",
   "main": "index.js",
   "bin": {
-    "codeshift": "./src/index.js"
+    "codeshift": "src/index.js"
   },
   "directories": {
-    "example": "examples"
+    "example": "examples",
+    "test": "tests"
   },
-  "author": "Uday Rana",
+  "author": "Uday Rana (https://github.com/uday-rana)",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/uday-rana/codeshift.git"
+  },
+  "bugs": {
+    "url": "https://github.com/uday-rana/codeshift/issues"
+  },
+  "homepage": "https://github.com/uday-rana/codeshift#readme",
   "lint-staged": {
     "**/*": [
       "prettier --write --ignore-unknown",
