@@ -95,6 +95,21 @@ codeshift -o index.go go examples/index.js
 
 ![codeshift file output demo](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/tqlkq2d1495e6qps5wz3.gif)
 
+## Configuration File
+
+Certain options can be set in a TOML file located in your home directory: `~/.codeshift.toml`. Supported options are:
+
+- `--output`
+- `--token-usage`
+
+### Example
+
+```toml
+[settings]
+output="output.go"
+tokenUsage=true
+```
+
 ## Contributing
 
 See [CONTRIBUTING.md](./CONTRIBUTING.md)
