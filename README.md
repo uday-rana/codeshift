@@ -26,25 +26,10 @@ Codeshift is a command-line tool to translate and transform source code files be
 
 ## Installation
 
-- Clone the repository with [Git](https://git-scm.com/):
+- Run `npm install -g @uday-rana/codeshift`.:
 
   ```bash
-  git clone https://github.com/uday-rana/codeshift.git
-  ```
-
-  - Alternatively, download the repository as a .zip from the GitHub page and extract it
-
-- In the repository's root directory (where `package.json` is located), run `npm install`:
-
-  ```bash
-  cd codeshift/
-  npm install
-  ```
-
-- To be able to run the program without prefixing `node`, run `npm install -g .` or `npm link` within the project directory:
-
-  ```bash
-  npm install -g .
+  npm install -g codeshift
   ```
 
 - Create a file called `.env` by copying the `.env.example` file
@@ -97,10 +82,10 @@ codeshift -o index.go go examples/index.js
 
 ## Configuration File
 
-Certain options can be set in a TOML file located in your home directory: `~/.codeshift.toml`. Supported options are:
+Options can be set in a TOML file located in your home directory: `~/.codeshift.toml`. Supported options are:
 
-- `--output`
-- `--token-usage`
+- `--output="filename"`
+- `--token-usage=true|false`
 
 ### Example
 
