@@ -1,5 +1,5 @@
 {
-  "name": "codeshift",
+  "name": "@uday-rana/codeshift",
   "version": "0.0.1",
   "description": "Transform code from one language to another",
   "main": "index.js",
