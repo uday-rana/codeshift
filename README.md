@@ -26,11 +26,7 @@ Codeshift is a command-line tool to translate and transform source code files be
 
 ## Installation
 
-- Run `npm install -g @uday-rana/codeshift`.:
-
-  ```bash
-  npm install -g codeshift
-  ```
+- Run `npm install -g @uday-rana/codeshift`.
 
 - Create a file called `.env` by copying the `.env.example` file
 
