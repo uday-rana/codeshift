@@ -1,6 +1,6 @@
 {
   "name": "@uday-rana/codeshift",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "Transform code from one language to another",
   "main": "src/index.js",
   "bin": {
