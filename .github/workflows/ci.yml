@@ -1,20 +1,16 @@
 name: CI
-
 on:
   push:
     branches: ["main"]
   pull_request:
     branches: ["main"]
-
 jobs:
   lint-format:
     name: Check formatting and lint
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [20.x]
-
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
@@ -26,15 +22,12 @@ jobs:
       - run: npx prettier --check .
       - run: npx -y oxlint@0.10.3 --deny-warnings
       - run: npx eslint
-
   unit-tests:
     name: Unit tests
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [20.x]
-
     steps:
       - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
