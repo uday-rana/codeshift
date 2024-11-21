@@ -57,7 +57,6 @@ Codeshift is a command-line tool to translate and transform source code files be
 
 ```bash
 npx codeshift [options] <output-language> <input-files...>
-npx codeshift [options] <output-language> <input-files...>
 ```
 
 ### Arguments
@@ -77,7 +76,6 @@ npx codeshift [options] <output-language> <input-files...>
 
 ```bash
 # Converts a JavaScript file (index.js) to Go, saving the output in index.go
-npx codeshift -o index.go go examples/index.js
 npx codeshift -o index.go go examples/index.js
 ```
 
