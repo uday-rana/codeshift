@@ -28,7 +28,7 @@ Codeshift is a command-line tool to translate and transform source code files be
 
 - Run `npm install -g @uday-rana/codeshift`.
 
-- Create a file called `.env` by copying the `.env.example` file
+- Create a file called `.env` in your current directory by copying the [`.env.example`](https://github.com/uday-rana/codeshift/blob/main/.env.example) file
 
 - Add your API key, preferred base URL, and preferred model. It should look similar to the example below:
 
@@ -52,7 +52,7 @@ Codeshift is a command-line tool to translate and transform source code files be
 ## Usage
 
 ```bash
-codeshift [options] <output-language> <input-files...>
+npx codeshift [options] <output-language> <input-files...>
 ```
 
 ### Arguments
@@ -71,7 +71,7 @@ codeshift [options] <output-language> <input-files...>
 
 ```bash
 # Converts a JavaScript file (index.js) to Go, saving the output in index.go
-codeshift -o index.go go examples/index.js
+npx codeshift -o index.go go examples/index.js
 ```
 
 ![codeshift file output demo](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/tqlkq2d1495e6qps5wz3.gif)
