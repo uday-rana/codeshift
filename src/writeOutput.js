@@ -1,4 +1,4 @@
-const fs = require("node:fs/promises");
+const fsPromises = require("node:fs/promises");
 
 /**
  * Writes the completion result to the specified output file or standard output.
@@ -36,7 +36,10 @@ async function writeOutput(
     } = completion?.usage || {};
     tokenUsage = { prompt_tokens, completion_tokens, total_tokens };
     if (outputFilePath) {
-      await fs.writeFile(outputFilePath, completion.choices[0].message.content);
+      await fsPromises.writeFile(
+        outputFilePath,
+        completion.choices[0].message.content,
+      );
     } else {
       process.stdout.write(completion.choices[0].message.content);
     }
@@ -73,7 +76,7 @@ async function processCompletionStream(
 ) {
   const writeFunction = outputFilePath
     ? async (completionChunk) =>
-        await fs.appendFile(
+        await fsPromises.appendFile(
           outputFilePath,
           completionChunk.choices[0]?.delta?.content || "",
         )
@@ -97,13 +100,13 @@ async function processCompletionStream(
     }
 
     if (outputFilePath) {
-      await fs.appendFile(outputFilePath, "\n");
+      await fsPromises.appendFile(outputFilePath, "\n");
     } else {
       process.stdout.write("\n");
     }
   } catch (error) {
     console.error(`error reading response stream: ${error}`);
-    process.exit(23);
+    process.exit(1);
   }
 }
 
@@ -121,7 +124,8 @@ async function processCompletionStream(
  */
 function displayTokenUsage({ prompt_tokens, completion_tokens, total_tokens }) {
   if (prompt_tokens == 0 && completion_tokens == 0 && total_tokens == 0) {
-    console.error(`\n No Token Usage returned by model.`);
+    console.error(`\n No token usage data returned by model.`);
+    return;
   }
 
   console.error(

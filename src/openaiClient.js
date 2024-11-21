@@ -1,8 +1,9 @@
 const OpenAI = require("openai");
+const config = require("./config");
 
 const openai = new OpenAI({
-  baseURL: process.env.BASE_URL,
-  apiKey: process.env.API_KEY,
+  baseURL: config.baseUrl,
+  apiKey: config.apiKey,
 });
 
 module.exports = openai;

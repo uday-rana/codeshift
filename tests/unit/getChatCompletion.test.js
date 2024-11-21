@@ -55,8 +55,11 @@ const b = 2;\
   test("Should throw an error if the API call fails", async () => {
     openai.chat.completions.create.mockRejectedValue(new Error("API error"));
 
-    await expect(getChatCompletion(prompt, model, false)).rejects.toThrow(
-      "API error",
-    );
+    const exitSpy = jest.spyOn(process, "exit").mockImplementation(() => {});
+
+    await getChatCompletion(prompt, model, false);
+    expect(exitSpy).toHaveBeenCalledWith(1);
+
+    exitSpy.mockRestore();
   });
 });

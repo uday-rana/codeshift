@@ -1,4 +1,4 @@
-const fs = require("node:fs/promises");
+const fsPromises = require("node:fs/promises");
 const buildPrompt = require("../../src/buildPrompt");
 
 jest.mock("node:fs/promises");
@@ -19,7 +19,7 @@ const b = 2;\
 \`\`\`\n\
 `;
   test("Should build prompt correctly when files are read successfully", async () => {
-    fs.readFile
+    fsPromises.readFile
       .mockResolvedValueOnce(fileContents[0])
       .mockResolvedValueOnce(fileContents[1]);
 
@@ -28,11 +28,11 @@ const b = 2;\
   });
 
   test("Should call process.exit() when a file cannot be read", async () => {
-    fs.readFile.mockRejectedValueOnce(new Error("File read error"));
+    fsPromises.readFile.mockRejectedValueOnce(new Error("File read error"));
     const exitSpy = jest.spyOn(process, "exit").mockImplementation(() => {});
 
     await buildPrompt("TypeScript", inputFiles);
-    expect(exitSpy).toHaveBeenCalledWith(21);
+    expect(exitSpy).toHaveBeenCalledWith(1);
 
     exitSpy.mockRestore();
   });
