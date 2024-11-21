@@ -1,4 +1,4 @@
-const fs = require("node:fs/promises");
+const fsPromises = require("node:fs/promises");
 
 /**
  * Constructs a prompt by reading the content of input files and formatting it for code conversion.
@@ -22,7 +22,7 @@ Do not use backticks (\`) to enclose the code in your response.\n\n`;
   try {
     // Loop through input files and add them to prompt
     for (const inputFilePath of inputFiles) {
-      const inputFileContent = await fs.readFile(inputFilePath, {
+      const inputFileContent = await fsPromises.readFile(inputFilePath, {
         encoding: "utf8",
       });
 
@@ -35,7 +35,7 @@ Do not use backticks (\`) to enclose the code in your response.\n\n`;
     return prompt;
   } catch (error) {
     console.error(`error reading input files: ${error}`);
-    process.exit(21);
+    process.exit(1);
   }
 }
 

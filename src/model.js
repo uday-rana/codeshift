@@ -1,3 +1,5 @@
+const config = require("./config");
+
 // Define supported providers, their base URLs, and their default models
 const supportedProviders = {
   openai: {
@@ -14,21 +16,24 @@ const supportedProviders = {
   },
 };
 
-let model = process.env.MODEL;
+/**
+ * The LLM model to be used by the program.
+ * @type {string}
+ */
+let model = config.model;
 
 if (!model) {
-  // Check if supplied baseURL belongs to a supported provider
+  // Check if supplied base URL belongs to a supported provider
   const provider = Object.values(supportedProviders).find((supportedProvider) =>
-    process.env.BASE_URL.startsWith(supportedProvider.baseURL),
+    config.baseUrl.startsWith(supportedProvider.baseURL),
   );
 
   if (!provider) {
     throw new Error(
-      `Unsupported provider for BASE_URL ${process.env.BASE_URL}. Please set a valid MODEL environment variable.`,
+      `Unsupported provider for base URL ${config.baseUrl}. Please set a valid model in the config.`,
     );
   }
 
   model = provider.defaultModel;
 }
-
 module.exports = model;

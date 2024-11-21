@@ -16,24 +16,29 @@ const openai = require("./openaiClient");
  * @throws {Error} - Throws an error if the API call fails.
  */
 async function getChatCompletion(prompt, model, streamResponseRequested) {
-  return await openai.chat.completions.create({
-    messages: [
-      {
-        role: "system",
-        content: `You will receive source code files and must convert them to the desired language.`,
+  try {
+    return await openai.chat.completions.create({
+      messages: [
+        {
+          role: "system",
+          content: `You will receive source code files and must convert them to the desired language.`,
+        },
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      model: model,
+      max_tokens: 1024,
+      stream: streamResponseRequested || false,
+      stream_options: {
+        include_usage: true,
       },
-      {
-        role: "user",
-        content: prompt,
-      },
-    ],
-    model: model,
-    max_tokens: 1024,
-    stream: streamResponseRequested || false,
-    stream_options: {
-      include_usage: true,
-    },
-  });
+    });
+  } catch (error) {
+    console.error(`error generating response:`, error);
+    process.exit(1);
+  }
 }
 
 module.exports = getChatCompletion;

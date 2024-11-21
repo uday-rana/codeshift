@@ -1,0 +1,7 @@
+[settings]
+baseUrl="xxxxxxxxxxxxxxxxxx"
+apiKey="sk-xxxxxxxxxxx"
+outputFile="xxxxxxxxxxx"
+model="xxxxxxxxxxxx"
+tokenUsage=false
+stream=false

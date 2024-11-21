@@ -28,30 +28,35 @@ Codeshift is a command-line tool to translate and transform source code files be
 
 - Run `npm install -g @uday-rana/codeshift`.
 
-- Create a file called `.env` in your current directory by copying the [`.env.example`](https://github.com/uday-rana/codeshift/blob/main/.env.example) file
+- Run `npx codeshift`. This will generate a `.codeshift.config.toml` file in your current directory.
 
-- Add your API key, preferred base URL, and preferred model. It should look similar to the example below:
+- In `.codeshift.config.toml`, set the base URL for your preferred provider and add your API key. It should look something like this:
 
-  - For OpenAI, use the base URL `https://api.openai.com/v1`
-  - For OpenRouter, use the base URL `https://openrouter.ai/api/v1`
-  - For Groq, use the base URL `https://api.groq.com/openai/v1`.
-  - For a list of models for each provider, see:
+  ```toml
+  # .codeshift.config.toml
 
+  [settings]
+  baseUrl="https://openrouter.ai/api/v1"
+  apiKey="sk-or-v1-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+  outputFile="xxxxxxxxxxx"
+  model=""
+  tokenUsage=true
+  stream=true
+  ```
+
+  - The following base URLs are supported. Others may be used but are not supported and may cause errors:
+    - OpenAI: `https://api.openai.com/v1`
+    - OpenRouter: `https://openrouter.ai/api/v1`
+    - Groq: `https://api.groq.com/openai/v1`.
+  - For a list of models for supported providers, see:
     - [OpenAI models](https://platform.openai.com/docs/models)
     - [OpenRouter models](https://openrouter.ai/models)
     - [Groq models](https://console.groq.com/docs/models)
 
-    ```bash
-    # .env
-
-    API_KEY=YOUR_API_KEY_HERE
-    BASE_URL=https://api.groq.com/openai/v1
-    MODEL=llama3-8b-8192
-    ```
-
 ## Usage
 
 ```bash
+npx codeshift [options] <output-language> <input-files...>
 npx codeshift [options] <output-language> <input-files...>
 ```
 
@@ -64,6 +69,7 @@ npx codeshift [options] <output-language> <input-files...>
 
 - `-o, --output`: Specify filename to write output to
 - `-t, --token-usage`: Display the number of tokens used by the AI for processing
+- `-s, --stream`: Stream the response from the LLM.
 - `-h, --help`: Display the help message explaining usage, options, and arguments
 - `-v, --version`: Display the program name and version number
 
@@ -72,24 +78,10 @@ npx codeshift [options] <output-language> <input-files...>
 ```bash
 # Converts a JavaScript file (index.js) to Go, saving the output in index.go
 npx codeshift -o index.go go examples/index.js
+npx codeshift -o index.go go examples/index.js
 ```
 
 ![codeshift file output demo](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/tqlkq2d1495e6qps5wz3.gif)
-
-## Configuration File
-
-Options can be set in a TOML file located in your home directory: `~/.codeshift.toml`. Supported options are:
-
-- `--output="filename"`
-- `--token-usage=true|false`
-
-### Example
-
-```toml
-[settings]
-output="output.go"
-tokenUsage=true
-```
 
 ## Contributing
 

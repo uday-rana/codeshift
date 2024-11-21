@@ -1,4 +1,4 @@
-const fs = require("node:fs/promises");
+const fsPromises = require("node:fs/promises");
 const writeOutput = require("../../src/writeOutput");
 jest.mock("node:fs/promises");
 
@@ -11,7 +11,7 @@ describe("writeOutput() function", () => {
 
     await writeOutput(completion, outputFilePath, false, false);
 
-    expect(fs.writeFile).toHaveBeenCalledWith(
+    expect(fsPromises.writeFile).toHaveBeenCalledWith(
       outputFilePath,
       completion.choices[0].message.content,
     );
@@ -39,14 +39,20 @@ describe("writeOutput() function", () => {
       { choices: [{ delta: { content: "Chunk 2" } }] },
     ];
 
-    fs.appendFile.mockResolvedValue();
+    fsPromises.appendFile.mockResolvedValue();
 
     await writeOutput(completion, outputFilePath, false, true);
 
-    expect(fs.appendFile).toHaveBeenCalledTimes(3);
-    expect(fs.appendFile).toHaveBeenCalledWith(outputFilePath, "Chunk 1");
-    expect(fs.appendFile).toHaveBeenCalledWith(outputFilePath, "Chunk 2");
-    expect(fs.appendFile).toHaveBeenCalledWith(outputFilePath, "\n");
+    expect(fsPromises.appendFile).toHaveBeenCalledTimes(3);
+    expect(fsPromises.appendFile).toHaveBeenCalledWith(
+      outputFilePath,
+      "Chunk 1",
+    );
+    expect(fsPromises.appendFile).toHaveBeenCalledWith(
+      outputFilePath,
+      "Chunk 2",
+    );
+    expect(fsPromises.appendFile).toHaveBeenCalledWith(outputFilePath, "\n");
   });
 
   test("Should write response to stdout in chunks when response is a stream", async () => {
@@ -127,7 +133,7 @@ describe("writeOutput() function", () => {
     await writeOutput(completion, outputFilePath, true, false);
 
     expect(consoleErrorSpy).toHaveBeenCalledWith(
-      `\n No Token Usage returned by model.`,
+      `\n No token usage data returned by model.`,
     );
 
     consoleErrorSpy.mockRestore();
@@ -142,7 +148,7 @@ describe("writeOutput() function", () => {
 
     await writeOutput(errorCompletion, "output.txt", true, true);
 
-    expect(exitSpy).toHaveBeenCalledWith(23);
+    expect(exitSpy).toHaveBeenCalledWith(1);
 
     exitSpy.mockRestore();
   });
