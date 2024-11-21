@@ -8,7 +8,7 @@ program
   .name(name)
   .description(description)
   .version(`${name} v${version}`, "-v, --version")
-  .option("-o, --outputFile <filename>", "specify filename to write output to")
+  .option("-o, --output-file <filename>", "specify filename to write output to")
   .option("-t, --token-usage", "report token usage")
   .option("-s, --stream", "stream the response")
   .argument("<output-language>", "language to transform code to")

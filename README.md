@@ -66,7 +66,7 @@ npx codeshift [options] <output-language> <input-files...>
 
 ### Options
 
-- `-o, --output`: Specify filename to write output to
+- `-o, --output-file`: Specify filename to write output to
 - `-t, --token-usage`: Display the number of tokens used by the AI for processing
 - `-s, --stream`: Stream the response from the LLM.
 - `-h, --help`: Display the help message explaining usage, options, and arguments
