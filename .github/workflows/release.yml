@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [lts/iron, lts/jod, lts/*]
+        node-version: [lts/*]
     permissions:
       contents: read
       id-token: write
