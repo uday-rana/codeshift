@@ -1,5 +1,7 @@
 # codeshift
 
+[![CI](https://github.com/uday-rana/codeshift/actions/workflows/ci.yml/badge.svg)](https://github.com/uday-rana/codeshift/actions/workflows/ci.yml)
+
 Codeshift is a command-line tool to translate and transform source code files between programming languages.
 
 ![codeshift tool demo: translating an express.js server to rust](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/1bphaoatr4iig56ac2z4.gif)
